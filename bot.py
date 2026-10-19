@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 app = Client(
     "AutoFilterBot",
     api_id=config.37601205,
-    api_hash=config.6d73743bfe27-47bf3c06ed90be7d8b34,
+    api_hash=config.API_HASH,
     bot_token=config.8574146217:AAHipNSOwLm9hwIMeLKl6qVLLJ2N-c9FIBQ
 )
 
