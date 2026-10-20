@@ -1,4 +1,3 @@
-
 import logging
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -68,9 +67,10 @@ async def auto_filter(client, message):
     query = message.text
     await message.reply_text(f"🔍 Searching for **'{query}'**...")
 
-if __name__ == "__main__":
-    # Start web server in background thread for Render port binding
-    keep_alive()
-    print("Bot is starting...")
-    # Start Pyrogram bot
-    app.run()
+# Start web server for Render port binding
+keep_alive()
+
+# Run the bot directly
+print("Bot is starting...")
+app.run()
+
