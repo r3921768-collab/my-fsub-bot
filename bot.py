@@ -8,7 +8,7 @@ from keep_alive import keep_alive
 # Logging setup
 logging.basicConfig(level=logging.INFO)
 
-# Pyrogram Bot Client setup with explicit bot_token
+# Pyrogram Bot Client setup
 app = Client(
     "AutoFilterBot",
     api_id=config.API_ID,
@@ -16,7 +16,7 @@ app = Client(
     bot_token=config.BOT_TOKEN
 )
 
-# Function to check if user joined both FSUB channels
+# Function to check Force-Subscribe (FSUB)
 async def check_fsub(client, user_id):
     try:
         await client.get_chat_member(config.FSUB_CHANNEL_1, user_id)
@@ -54,6 +54,18 @@ async def start_handler(client, message):
     await message.reply_text(
         f"👋 Hello {message.from_user.first_name}!\n\nI am your custom Auto-Filter bot. Send me the name of the movie or file you are looking for!"
     )
+
+@app.on_message(filters.text & filters.private & ~filters.command("start"))
+async def auto_filter(client, message):
+    user_id = message.from_user.id
+    fsub_status = await check_fsub(client, user_id)
+    
+    if fsub_status != 0:
+        await message.reply_text("⚠️ Please join our force-subscribe channels first before searching for files!")
+        return
+        
+    query = message.text
+    await message.reply_text(f"🔍 Searching for **'{query}'**...")
 
 # Start web server for Render port binding
 keep_alive()
