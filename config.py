@@ -1,6 +1,4 @@
-import os
-
-# Direct values (No env variables confusion)
+# Direct hardcoded values (No environment variable issues)
 API_ID = 37601205
 API_HASH = "6d73743bfe2747bf3c00ed90be7d8b3d"
 BOT_TOKEN = "8574146217:AAHiPNS0wLm9h-TM-UKi6-VLL1QON-OE5T0"
@@ -8,3 +6,4 @@ DATABASE_URI ="mongodb+srv://r3921768_db_user:<db_password>@rajveer.ttckgz3.mong
 DB_CHANNEL = -1003867813389
 FSUB_CHANNEL_1 = -1003932990702
 FSUB_CHANNEL_2 = -1003395311841
+
