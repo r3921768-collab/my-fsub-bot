@@ -1,4 +1,5 @@
 import logging
+import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import config
@@ -15,39 +16,51 @@ app = Client(
     bot_token=config.BOT_TOKEN
 )
 
-# TAMARI BANE CHANNEL NI LINK AHIYA LAKHO
-CHANNEL_1_LINK = "https://t.me/movie_series0012"
-CHANNEL_2_LINK = "https://t.me/movieseries0453"
-CHANNEL_NAME = "Movie & series 🤩"
+# Tamari channels na usernames yaha rakho
+CHANNEL_1 = "https://t.me/movie_series0012"
+CHANNEL_2 = "https://t.me/movieseries0453"
 
 @app.on_message(filters.command("start") & filters.private)
 async def start_handler(client, message):
     await message.reply_text(
-        f"👋 Hello {message.from_user.first_name}!\n\n🎬 Send me the name of the movie or series you are looking for, and I will find it for you!"
+        f"👋 Hello {message.from_user.first_name}!\n\n"
+        f"🎬 I am an advanced Auto-Filter Bot.\n"
+        f"🔍 Send me any movie or series name, and I will find the files for you instantly!"
     )
 
 @app.on_message(filters.text & filters.private & ~filters.command("start"))
 async def auto_filter(client, message):
     query = message.text
     
-    # Professional buttons with your channels
-    buttons = [
-        [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data="file_1")],
-        [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data="file_2")],
+    # Video jeva professional file search buttons aur channels link
+    search_buttons = [
+        [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data=f"dl_1_{query}")],
+        [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data=f"dl_2_{query}")],
+        [InlineKeyboardButton("📦 [950.84 MB] Fast Server File", callback_data=f"dl_3_{query}")],
         [
-            InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1_LINK),
-            InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2_LINK)
+            InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1),
+            InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2)
         ]
     ]
     
-    await message.reply_text(
-        f"🎬 **{CHANNEL_NAME}**\n\n🔍 Search Query: **{query}**\n\n*Tap on the buttons below to get your files or join channels...*\n\n⏳ Note: Files will be auto-deleted in 5 minutes.",
-        reply_markup=InlineKeyboardMarkup(buttons)
+    sent_msg = await message.reply_text(
+        f"🎬 **Movie & Series Search Result**\n\n"
+        f"🔍 Query: **{query}**\n"
+        f"⚡ Status: Files Found Successfully!\n\n"
+        f"*Tap on any quality button below to get your file...*\n\n"
+        f"⏳ **Note:** Files will be auto-deleted in 5 minutes for copyright safety.",
+        reply_markup=InlineKeyboardMarkup(search_buttons)
     )
+    
+    # Auto-delete warning note feature (5 minutes auto delete simulation)
+    await asyncio.sleep(300)
+    try:
+        await sent_msg.delete()
+    except:
+        pass
 
 if __name__ == "__main__":
     keep_alive()
-    print("Bot is starting...")
+    print("Auto-Filter Bot is starting with file search layout...")
     app.run()
-    
     
