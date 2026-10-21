@@ -30,7 +30,7 @@ async def start_handler(client, message):
 async def auto_filter(client, message):
     query = message.text
     
-    # Banne channel na buttons ahiya set karya chhe
+    # Professional buttons with your channels
     buttons = [
         [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data="file_1")],
         [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data="file_2")],
@@ -49,4 +49,5 @@ if __name__ == "__main__":
     keep_alive()
     print("Bot is starting...")
     app.run()
+    
     
