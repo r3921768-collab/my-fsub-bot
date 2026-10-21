@@ -15,6 +15,11 @@ app = Client(
     bot_token=config.BOT_TOKEN
 )
 
+# TAMARI BANE CHANNEL NI LINK AHIYA LAKHO
+CHANNEL_1_LINK = "https://t.me/movie_series0012"
+CHANNEL_2_LINK = "https://t.me/movieseries0453"
+CHANNEL_NAME = "Movie & series 🤩"
+
 @app.on_message(filters.command("start") & filters.private)
 async def start_handler(client, message):
     await message.reply_text(
@@ -25,22 +30,23 @@ async def start_handler(client, message):
 async def auto_filter(client, message):
     query = message.text
     
-    # Professional movie result buttons (similar to your video clip)
-    file_buttons = [
+    # Banne channel na buttons ahiya set karya chhe
+    buttons = [
         [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data="file_1")],
         [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data="file_2")],
-        [InlineKeyboardButton("📦 [950.84 MB] Fast Download File", callback_data="file_3")]
+        [
+            InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1_LINK),
+            InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2_LINK)
+        ]
     ]
     
     await message.reply_text(
-        f"🔍 Search Query: **{query}**\nTotal Results: **3**\n\n*Tap on the file button below to get the download link...*\n\n⏳ Note: Files will be auto-deleted in 10 minutes.",
-        reply_markup=InlineKeyboardMarkup(file_buttons)
+        f"🎬 **{CHANNEL_NAME}**\n\n🔍 Search Query: **{query}**\n\n*Tap on the buttons below to get your files or join channels...*\n\n⏳ Note: Files will be auto-deleted in 5 minutes.",
+        reply_markup=InlineKeyboardMarkup(buttons)
     )
 
 if __name__ == "__main__":
-    # Start web server for Render port binding
     keep_alive()
     print("Bot is starting...")
-    # Start Pyrogram bot
     app.run()
     
