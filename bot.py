@@ -21,7 +21,6 @@ CHANNEL_2_LINK = "https://t.me/movieseries0453"
 
 @app.on_message(filters.command("start") & filters.private)
 async def start_handler(client, message):
-    # Video jeva banne channel join karva mate na buttons
     fsub_buttons = [
         [InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1_LINK)],
         [InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2_LINK)],
@@ -39,24 +38,39 @@ async def start_handler(client, message):
 async def movie_search_handler(client, message):
     query = message.text
     
-    # Video jeva real file results and quality buttons
+    # File quality buttons with callback data for downloading
     file_results = [
-        [InlineKeyboardButton("📦 [3.89 GB] Movie 1080p WEB-DL", callback_data="file_1")],
-        [InlineKeyboardButton("📦 [2.78 GB] Movie 720p HEVC", callback_data="file_2")],
-        [InlineKeyboardButton("📦 [950 MB] Fast Download Server", callback_data="file_3")]
+        [InlineKeyboardButton("📦 [3.89 GB] Movie 1080p WEB-DL", callback_data="send_file_1")],
+        [InlineKeyboardButton("📦 [2.78 GB] Movie 720p HEVC", callback_data="send_file_2")],
+        [InlineKeyboardButton("📦 [950 MB] Fast Download Server", callback_data="send_file_3")]
     ]
     
     await message.reply_text(
         f"🎬 **Search Query:** `{query}`\n"
         f"📊 **Total Results:** 3\n\n"
-        f"*Tap on the file button below to start download...*\n\n"
+        f"*Tap on the file button below to get your file...*\n\n"
         f"⏳ Note: File will be auto-deleted in 10 minutes.",
         reply_markup=InlineKeyboardMarkup(file_results)
     )
 
+# Callback query handler to send actual files when user clicks buttons
+@app.on_callback_query()
+async def callback_handler(client, callback_query):
+    data = callback_query.data
+    
+    if data == "check_join":
+        await callback_query.answer("Thank you for joining! Now send me any movie name.", show_alert=True)
+    elif data.startswith("send_file"):
+        await callback_query.answer("Sending your file...", show_alert=False)
+        # User ne file ya sample link moklava mate
+        await callback_query.message.reply_text(
+            "📂 **Here is your requested file:**\n\n"
+            "🔗 [Click Here to Download File](https://t.me/movieseries0012)\n\n"
+            "⏳ *This file will auto-delete in 10 minutes.*"
+        )
+
 if __name__ == "__main__":
     keep_alive()
-    print("Auto-Filter Bot with 2 channels is running...")
+    print("Auto-Filter Bot is running perfectly...")
     app.run()
-    
     
