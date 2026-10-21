@@ -1,6 +1,7 @@
 import logging
 from pyrogram import Client, filters
 import config
+from keep_alive import keep_alive
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -25,6 +26,9 @@ async def auto_filter(client, message):
     await message.reply_text(f"🔍 Searching for **'{query}'**...")
 
 if __name__ == "__main__":
-    print("Bot is starting directly...")
+    # Start Flask web server in background thread for Render port binding
+    keep_alive()
+    print("Bot is starting with keep_alive...")
+    # Start Pyrogram bot
     app.run()
     
