@@ -16,23 +16,23 @@ app = Client(
     bot_token=config.BOT_TOKEN
 )
 
-# Tamari channels na usernames yaha rakho
-CHANNEL_1 = "https://t.me/movie_series0012"
+# Tamari banne channel ni links yaha rakho
+CHANNEL_1 = "https://t.me/movieseries0012"
 CHANNEL_2 = "https://t.me/movieseries0453"
 
-@app.on_message(filters.command("start") & filters.private)
+@app.on_message(filters.command("start") & (filters.private | filters.group))
 async def start_handler(client, message):
     await message.reply_text(
         f"👋 Hello {message.from_user.first_name}!\n\n"
-        f"🎬 I am an advanced Auto-Filter Bot.\n"
+        f"🎬 I am your Auto-Filter Bot.\n"
         f"🔍 Send me any movie or series name, and I will find the files for you instantly!"
     )
 
-@app.on_message(filters.text & filters.private & ~filters.command("start"))
+@app.on_message(filters.text & (filters.private | filters.group) & ~filters.command("start"))
 async def auto_filter(client, message):
     query = message.text
     
-    # Video jeva professional file search buttons aur channels link
+    # Professional search result buttons with your channels
     search_buttons = [
         [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data=f"dl_1_{query}")],
         [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data=f"dl_2_{query}")],
@@ -52,7 +52,7 @@ async def auto_filter(client, message):
         reply_markup=InlineKeyboardMarkup(search_buttons)
     )
     
-    # Auto-delete warning note feature (5 minutes auto delete simulation)
+    # Auto-delete warning note feature (5 minutes)
     await asyncio.sleep(300)
     try:
         await sent_msg.delete()
@@ -61,6 +61,6 @@ async def auto_filter(client, message):
 
 if __name__ == "__main__":
     keep_alive()
-    print("Auto-Filter Bot is starting with file search layout...")
+    print("Auto-Filter Bot is starting for Group & PM...")
     app.run()
     
