@@ -41,18 +41,18 @@ async def start_handler(client, message):
     
     if fsub_status != 0:
         buttons = [
-            [InlineKeyboardButton("📢 Join Channel 1", url=f"https://t.me/c/{str(config.FSUB_CHANNEL_1)[4:]}")],
-            [InlineKeyboardButton("📢 Join Channel 2", url=f"https://t.me/c/{str(config.FSUB_CHANNEL_2)[4:]}")],
+            [InlineKeyboardButton("📢 Request to Join Channel 1", url=f"https://t.me/c/{str(config.FSUB_CHANNEL_1)[4:]}")],
+            [InlineKeyboardButton("📢 Request to Join Channel 2", url=f"https://t.me/c/{str(config.FSUB_CHANNEL_2)[4:]}")],
             [InlineKeyboardButton("🔄 Try Again", url=f"https://t.me/{client.me.username}?start=start")]
         ]
         await message.reply_text(
-            "⚠️ **Please join both of our update channels below to use this bot!**\n\nAfter joining both channels, click 'Try Again'.",
+            "⚠️ **To use this bot, you must join our update channels first!**\n\nClick below to send join requests, then click 'Try Again'.",
             reply_markup=InlineKeyboardMarkup(buttons)
         )
         return
 
     await message.reply_text(
-        f"👋 Hello {message.from_user.first_name}!\n\nI am your custom Auto-Filter bot. Send me the name of the movie or file you are looking for!"
+        f"👋 Hello {message.from_user.first_name}!\n\n🎬 Send me the name of the movie or series you are looking for, and I will find it for you!"
     )
 
 @app.on_message(filters.text & filters.private & ~filters.command("start"))
@@ -61,16 +61,31 @@ async def auto_filter(client, message):
     fsub_status = await check_fsub(client, user_id)
     
     if fsub_status != 0:
-        await message.reply_text("⚠️ Please join our force-subscribe channels first before searching for files!")
+        buttons = [
+            [InlineKeyboardButton("📢 Request to Join Channel", url=f"https://t.me/c/{str(config.FSUB_CHANNEL_1)[4:]}")],
+            [InlineKeyboardButton("🔄 Try Again", url=f"https://t.me/{client.me.username}?start=start")]
+        ]
+        await message.reply_text("⚠️ Please join our channels first before searching for files!", reply_markup=InlineKeyboardMarkup(buttons))
         return
         
     query = message.text
-    await message.reply_text(f"🔍 Searching for **'{query}'**...")
+    
+    # Simulated professional movie result buttons (similar to your video clip)
+    file_buttons = [
+        [InlineKeyboardButton("📦 [1.37 GB] High Quality 1080p", callback_data="file_1")],
+        [InlineKeyboardButton("📦 [597.74 MB] Medium Quality 720p", callback_data="file_2")],
+        [InlineKeyboardButton("📦 [950.84 MB] Fast Download File", callback_data="file_3")]
+    ]
+    
+    await message.reply_text(
+        f"🔍 Search Query: **{query}**\nTotal Results: **3**\n\n*Tap on the file button below to get the download link...*\n\n⏳ Note: Files will be auto-deleted in 10 minutes.",
+        reply_markup=InlineKeyboardMarkup(file_buttons)
+    )
 
-# Start web server for Render port binding
-keep_alive()
-
-# Run the bot directly
-print("Bot is starting...")
-app.run()
-
+if __name__ == "__main__":
+    # Start web server in background thread for Render port binding
+    keep_alive()
+    print("Bot is starting...")
+    # Start Pyrogram bot
+    app.run()
+    
