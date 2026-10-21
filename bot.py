@@ -1,8 +1,6 @@
-import asyncio
 import logging
 from pyrogram import Client, filters
 import config
-from keep_alive import keep_alive
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -26,15 +24,7 @@ async def auto_filter(client, message):
     query = message.text
     await message.reply_text(f"🔍 Searching for **'{query}'**...")
 
-async def main():
-    # Start web server for Render port binding in background
-    keep_alive()
-    print("Bot is starting with asyncio...")
-    # Start Pyrogram client properly
-    await app.start()
-    print("Bot started successfully!")
-    await asyncio.Event().wait()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    print("Bot is starting directly...")
+    app.run()
     
