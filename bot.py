@@ -3,7 +3,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # Bot credentials setup
-API_ID = 673743bf  # Tamaro API_ID (number ma)
+API_ID = "673743bf"  # Tamaro API_ID (number ma)
 API_HASH = "6d3743bfe2747bf3c06ed90be7d8b34"
 BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINoL1K6qVLLJ2N-c9FI8Q"
 
