@@ -6,7 +6,8 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 app = Client(
     "movie_bot",
     api_id=37601205, # Tamaro API_ID
-    api_hash=6d73743bfe2747bf3c06ed90be7d8b34, # Tamaro API_HASH
+    api_hash = "6d3743bfe2747bf3c06ed90be7d8b34",  # Aam quotes ma rakho
+    # Tamaro API_HASH
     bot_token=8574146217:AAHipNSOwLm9hwIMeLK16qVLLJ2N-c9FIBQ  # Tamaro BOT_TOKEN
 )
 
