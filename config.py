@@ -3,7 +3,7 @@ import os
 API_ID = 37601205
 API_HASH = "6d73743bfe2747bf3c06ed90be7d8b34"
 BOT_TOKEN = "8574146217:AAHipNSOwLm9hwIMeLKl6qVLLJ2N-c9FIBQ"
-DATABASE_URI = os.environ.get("DATABASE_URI", "")
+DATABASE_URI = os.environ.get("mongodb+srv://r3921768_db_user: <db_password>@rajveer.ttckgz3.mongodb.net/"," ")
 DB_CHANNEL = -1003867813389
 FSUB_CHANNEL_1 = -1003932990702
 FSUB_CHANNEL_2 = -1003395311841
