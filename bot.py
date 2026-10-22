@@ -2,13 +2,20 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-# Bot initialization
+# Bot credentials setup
+API_ID = 673743bf  # Tamaro API_ID (number ma)
+API_HASH = "6d3743bfe2747bf3c06ed90be7d8b34"
+BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINoL1K6qVLLJ2N-c9FI8Q"
+
+# Channel links
+CHANNEL_1 = "https://t.me/movieseries0012"
+CHANNEL_2 = "https://t.me/movieseries0012"
+
 app = Client(
-    "movie_bot",
-    api_id=37601205, # Tamaro API_ID
-    api_hash = "6d3743bfe2747bf3c06ed90be7d8b34",  # Aam quotes ma rakho
-    # Tamaro API_HASH
-    bot_token="8574146217:AAHipNSOwLm9hwIMeLK16qVLLJ2N-c9FIBQ"  # Tamaro BOT_TOKEN
+    "lucky_bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN
 )
 
 @app.on_message(filters.command("start") & filters.private)
@@ -63,10 +70,4 @@ async def file_cb(client, query):
 if __name__ == "__main__":
     print("Lucky Final Bot is running...")
     app.run()
-    if __name__ == "__main__":
-    print("Lucky Final Bot is running...")
-    import asyncio
-    asyncio.run(app.start())
-    asyncio.get_event_loop().run_forever()
-    
     
