@@ -8,7 +8,7 @@ app = Client(
     api_id=37601205, # Tamaro API_ID
     api_hash = "6d3743bfe2747bf3c06ed90be7d8b34",  # Aam quotes ma rakho
     # Tamaro API_HASH
-    bot_token=8574146217:AAHipNSOwLm9hwIMeLK16qVLLJ2N-c9FIBQ  # Tamaro BOT_TOKEN
+    bot_token="8574146217:AAHipNSOwLm9hwIMeLK16qVLLJ2N-c9FIBQ"  # Tamaro BOT_TOKEN
 )
 
 @app.on_message(filters.command("start") & filters.private)
