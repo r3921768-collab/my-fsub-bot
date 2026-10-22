@@ -1,21 +1,14 @@
-import logging
 import asyncio
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import config
-from keep_alive import keep_alive
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-logging.basicConfig(level=logging.INFO)
-
+# Bot initialization
 app = Client(
-    "LuckyFinalBot",
-    api_id=config.API_ID,
-    api_hash=config.API_HASH,
-    bot_token=config.BOT_TOKEN
+    "movie_bot",
+    api_id=37601205, # Tamaro API_ID
+    api_hash=6d73743bfe2747bf3c06ed90be7d8b34, # Tamaro API_HASH
+    bot_token=8574146217:AAHipNSOwLm9hwIMeLK16qVLLJ2N-c9FIBQ  # Tamaro BOT_TOKEN
 )
-
-CHANNEL_1 = "https://t.me/movieseries0012"
-CHANNEL_2 = "https://t.me/movieseries0453"
 
 @app.on_message(filters.command("start") & filters.private)
 async def start_handler(client, message):
@@ -46,7 +39,7 @@ async def search_handler(client, message):
     ]
     
     await message.reply_text(
-        f"🎬 **Search Results for:** `{query}`\n\n"
+        f"🔍 **Search Results for:** `{query}`\n"
         f"👇 *Tap any quality button below to get your file:*",
         reply_markup=InlineKeyboardMarkup(file_buttons)
     )
@@ -55,12 +48,11 @@ async def search_handler(client, message):
 async def file_cb(client, query):
     await query.answer("Sending file...", show_alert=False)
     sent_msg = await query.message.reply_text(
-        "📂 **Here is your requested movie file:**\n\n"
-        "🔗 [Click Here to Download File](https://t.me/movieseries0012)\n\n"
+        "📁 **Here is your requested movie file:**\n\n"
+        "🔗 [Click Here to Download File](https://t.me/movieseries0012)\n"
         "⏳ *Note: This file will auto-delete in 5 minutes for safety.*"
     )
     
-    # 5 minutes pachi message auto-delete thase
     await asyncio.sleep(300)
     try:
         await sent_msg.delete()
@@ -68,7 +60,12 @@ async def file_cb(client, query):
         pass
 
 if __name__ == "__main__":
-    keep_alive()
-    print("Lucky Bot v2 is running...")
+    print("Lucky Final Bot is running...")
     app.run()
+    if __name__ == "__main__":
+    print("Lucky Final Bot is running...")
+    import asyncio
+    asyncio.run(app.start())
+    asyncio.get_event_loop().run_forever()
+    
     
