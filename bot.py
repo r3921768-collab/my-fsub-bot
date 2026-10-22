@@ -69,6 +69,6 @@ async def file_cb(client, query):
 
 if __name__ == "__main__":
     keep_alive()
-    print("Lucky Final Bot is running...")
+    print("Lucky Bot v2 is running...")
     app.run()
     
