@@ -50,6 +50,7 @@ async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     query = update.message.text
     
+    # Button with dynamic movie name and quality
     file_keyboard = [
         [InlineKeyboardButton(f"📦 [1080p] {query}", callback_data="get_file_1080")],
         [InlineKeyboardButton(f"📦 [720p] {query}", callback_data="get_file_720")]
@@ -70,10 +71,11 @@ async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = query.message.chat_id
     
     try:
+        # Check if database channel has messages, trying message ID 1 or latest
         sent_msg = await context.bot.copy_message(
             chat_id=chat_id,
             from_chat_id=DATABASE_CHANNEL_ID,
-            message_id=1
+            message_id=1  # Tamari database channel na valid message ID sathe replace karjo
         )
         
         await asyncio.sleep(300)
@@ -82,7 +84,10 @@ async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except:
             pass
     except Exception as e:
-        await query.message.reply_text(f"⚠️ Error fetching file: {e}")
+        await query.message.reply_text(
+            f"⚠️ **Error fetching file:** `{e}`\n\n"
+            "💡 *Tip:* Make sure the database channel has files and the bot has full admin access to read/copy messages from it!"
+        )
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(BOT_TOKEN).build()
