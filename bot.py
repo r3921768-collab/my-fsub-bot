@@ -3,7 +3,7 @@ from telethon import TelegramClient, events
 
 API_ID = 37601205
 API_HASH = "6d3743bfe2747bf3c06ed90be7d8b34"
-BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINoL1K6qVLLJ2N-c9FI8Q"
+BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINeLKl6qVLLJ2N-c9FIBQ"
 
 CHANNEL_1 = "https://t.me/movieseries0012"
 CHANNEL_2 = "https://t.me/movieseries0012"
