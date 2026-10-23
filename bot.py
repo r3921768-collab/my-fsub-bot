@@ -1,69 +1,58 @@
 import asyncio
-try:
-    asyncio.get_event_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
+from telethon import TelegramClient, events
+from telethon.tl.types import Button
 
-# Aeni niche badho baki no code (Client, filters, etc.) rakhvo
-
-import asyncio
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
-# Bot credentials setup
-API_ID = 37601205  # Tamaro real integer API_ID yaha dalo (without quotes)
+API_ID = 37601205
 API_HASH = "6d3743bfe2747bf3c06ed90be7d8b34"
 BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINoL1K6qVLLJ2N-c9FI8Q"
 
-# Channel links
 CHANNEL_1 = "https://t.me/movieseries0012"
 CHANNEL_2 = "https://t.me/movieseries0012"
 
-app = Client(
-    "lucky_bot",
-    api_id=API_ID,
-    api_hash=API_HASH,
-    bot_token=BOT_TOKEN
-)
+client = TelegramClient('lucky_bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-@app.on_message(filters.command("start") & filters.private)
-async def start_handler(client, message):
+@client.on(events.NewMessage(pattern='/start'))
+async def start_handler(event):
+    sender = await event.get_sender()
+    name = sender.first_name if sender else "User"
+    
     buttons = [
-        [InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1)],
-        [InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2)],
-        [InlineKeyboardButton("✅ I Have Joined, Continue", callback_data="verified")]
+        [Button.url("📢 Join Channel 1", CHANNEL_1)],
+        [Button.url("📢 Join Channel 2", CHANNEL_2)],
+        [Button.inline("✅ I Have Joined, Continue", b"verified")]
     ]
-    await message.reply_text(
-        f"👋 Hello {message.from_user.first_name}!\n\n"
+    
+    await event.respond(
+        f"👋 Hello {name}!\n\n"
         "🎬 Welcome to Lucky Bot.\n"
         "🚨 Please join our both channels first, then send any movie name.",
-        reply_markup=InlineKeyboardMarkup(buttons)
+        buttons=buttons
     )
 
-@app.on_callback_query(filters.regex("^verified$"))
-async def verify_cb(client, query):
-    await query.answer("Verified successfully! Now send movie name.", show_alert=True)
-    await query.message.reply_text("✅ Verified! Now send the name of the movie you want.")
+@client.on(events.CallbackQuery(data=b'verified'))
+async def verify_cb(event):
+    await event.answer("Verified successfully! Now send movie name.", alert=True)
+    await event.respond("✅ Verified! Now send the name of the movie you want.")
 
-@app.on_message(filters.text & filters.private & ~filters.command("start"))
-async def search_handler(client, message):
-    query = message.text
+@client.on(events.NewMessage(incoming=True, func=lambda e: e.is_private and not e.text.startswith('/')))
+async def search_handler(event):
+    query = event.text
     
     file_buttons = [
-        [InlineKeyboardButton("📦 [3.89 GB] Movie 1080p WEB-DL", callback_data="get_file")],
-        [InlineKeyboardButton("📦 [2.78 GB] Movie 720p HEVC", callback_data="get_file")]
+        [Button.inline("📦 [3.89 GB] Movie 1080p WEB-DL", b"get_file")],
+        [Button.inline("📦 [2.78 GB] Movie 720p HEVC", b"get_file")]
     ]
     
-    await message.reply_text(
+    await event.respond(
         f"🔍 **Search Results for:** `{query}`\n"
         f"👇 *Tap any quality button below to get your file:*",
-        reply_markup=InlineKeyboardMarkup(file_buttons)
+        buttons=file_buttons
     )
 
-@app.on_callback_query(filters.regex("^get_file$"))
-async def file_cb(client, query):
-    await query.answer("Sending file...", show_alert=False)
-    sent_msg = await query.message.reply_text(
+@client.on(events.CallbackQuery(data=b'get_file'))
+async def file_cb(event):
+    await event.answer("Sending file...", alert=False)
+    sent_msg = await event.respond(
         "📁 **Here is your requested movie file:**\n\n"
         "🔗 [Click Here to Download File](https://t.me/movieseries0012)\n"
         "⏳ *Note: This file will auto-delete in 5 minutes for safety.*"
@@ -76,6 +65,6 @@ async def file_cb(client, query):
         pass
 
 if __name__ == "__main__":
-    print("Lucky Final Bot is running...")
-    app.run()
+    print("Lucky Final Bot (Telethon) is running...")
+    client.run_until_disconnected()
     
