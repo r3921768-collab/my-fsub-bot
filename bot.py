@@ -50,10 +50,11 @@ async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     query = update.message.text
     
-    # Button with dynamic movie name and quality
+    # Size ane quality vala buttons jeva tame screen ma joya
     file_keyboard = [
-        [InlineKeyboardButton(f"📦 [1080p] {query}", callback_data="get_file_1080")],
-        [InlineKeyboardButton(f"📦 [720p] {query}", callback_data="get_file_720")]
+        [InlineKeyboardButton("📦 [445.66 MB] 1080p Web-DL", callback_data="get_file_3")],
+        [InlineKeyboardButton("📦 [700.96 MB] 720p HEVC", callback_data="get_file_4")],
+        [InlineKeyboardButton("📦 [1.02 GB] 1080p HEVC", callback_data="get_file_5")]
     ]
     reply_markup = InlineKeyboardMarkup(file_keyboard)
     
@@ -69,13 +70,15 @@ async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer("Fetching movie file from database...")
     
     chat_id = query.message.chat_id
+    data = query.data
     
     try:
-        # Check if database channel has messages, trying message ID 1 or latest
+        msg_id = int(data.split("_")[-1])
+        
         sent_msg = await context.bot.copy_message(
             chat_id=chat_id,
             from_chat_id=DATABASE_CHANNEL_ID,
-            message_id=1  # Tamari database channel na valid message ID sathe replace karjo
+            message_id=msg_id
         )
         
         await asyncio.sleep(300)
@@ -86,7 +89,7 @@ async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await query.message.reply_text(
             f"⚠️ **Error fetching file:** `{e}`\n\n"
-            "💡 *Tip:* Make sure the database channel has files and the bot has full admin access to read/copy messages from it!"
+            "💡 *Tip:* Make sure the message exists in your database channel!"
         )
 
 if __name__ == '__main__':
