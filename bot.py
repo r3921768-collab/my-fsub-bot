@@ -2,7 +2,7 @@ import asyncio
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, CallbackQueryHandler, filters
 
-BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINeLKl6qVLLJ2N-c9FIBQ"
+BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
 CHANNEL_1 = "https://t.me/movieseries0012"
 CHANNEL_2 = "https://t.me/movieseries0012"
 
