@@ -40,19 +40,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
 
-async def verify_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    await query.message.reply_text("✅ Verified! Now send the name of the movie you want to search.")
-
 async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
     query = update.message.text
     
+    # Ahiya button na text ma movie nu naam query sathe dynamic aavse
     file_keyboard = [
-        [InlineKeyboardButton("📦 [1080p] Movie File", callback_data="get_file_1080")],
-        [InlineKeyboardButton("📦 [720p] Movie File", callback_data="get_file_720")]
+        [InlineKeyboardButton(f"📦 [1080p] {query}", callback_data="get_file_1080")],
+        [InlineKeyboardButton(f"📦 [720p] {query}", callback_data="get_file_720")]
     ]
     reply_markup = InlineKeyboardMarkup(file_keyboard)
     
@@ -62,7 +58,7 @@ async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
-
+    
 async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer("Fetching movie file from database...")
