@@ -22,8 +22,8 @@ threading.Thread(target=run_server, daemon=True).start()
 # ------------------------------------------------
 
 BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
-CHANNEL_1 = "https://t.me/movieseries0012"
-CHANNEL_2 = "https://t.me/movieseries0012"
+CHANNEL_1 = "https://t.me/movieseries0453"
+CHANNEL_2 = "https://t.me/movie_series0012"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
