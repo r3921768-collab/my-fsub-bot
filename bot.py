@@ -1,70 +1,66 @@
 import asyncio
-from telethon import TelegramClient, events
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, CallbackQueryHandler, filters
 
-API_ID = 37601205
-API_HASH = "6d3743bfe2747bf3c06ed90be7d8b34"
 BOT_TOKEN = "8574146217:AAHipNSOwLm9hwINeLKl6qVLLJ2N-c9FIBQ"
-
 CHANNEL_1 = "https://t.me/movieseries0012"
 CHANNEL_2 = "https://t.me/movieseries0012"
 
-client = TelegramClient('lucky_bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
-
-@client.on(events.NewMessage(pattern='/start'))
-async def start_handler(event):
-    sender = await event.get_sender()
-    name = sender.first_name if sender else "User"
-    
-    # Simple Telethon button list using buttons parameter format
-    buttons = [
-        [events.Button.url("📢 Join Channel 1", CHANNEL_1)],
-        [events.Button.url("📢 Join Channel 2", CHANNEL_2)],
-        [events.Button.inline("✅ I Have Joined, Continue", b"verified")]
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    keyboard = [
+        [InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1)],
+        [InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2)],
+        [InlineKeyboardButton("✅ I Have Joined, Continue", callback_data="verified")]
     ]
-    
-    await event.respond(
-        f"👋 Hello {name}!\n\n"
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        f"👋 Hello {user.first_name}!\n\n"
         "🎬 Welcome to Lucky Bot.\n"
         "🚨 Please join our both channels first, then send any movie name.",
-        buttons=buttons
+        reply_markup=reply_markup
     )
 
-@client.on(events.CallbackQuery(data=b'verified'))
-async def verify_cb(event):
-    await event.answer("Verified successfully! Now send movie name.", alert=True)
-    await event.respond("✅ Verified! Now send the name of the movie you want.")
+async def verify_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    await query.message.reply_text("✅ Verified! Now send the name of the movie you want.")
 
-@client.on(events.NewMessage(incoming=True, func=lambda e: e.is_private and not e.text.startswith('/')))
-async def search_handler(event):
-    query = event.text
-    
-    file_buttons = [
-        [events.Button.inline("📦 [3.89 GB] Movie 1080p WEB-DL", b"get_file")],
-        [events.Button.inline("📦 [2.78 GB] Movie 720p HEVC", b"get_file")]
+async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.message.text
+    keyboard = [
+        [InlineKeyboardButton("📦 [3.89 GB] Movie 1080p WEB-DL", callback_data="get_file")],
+        [InlineKeyboardButton("📦 [2.78 GB] Movie 720p HEVC", callback_data="get_file")]
     ]
-    
-    await event.respond(
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
         f"🔍 **Search Results for:** `{query}`\n"
         f"👇 *Tap any quality button below to get your file:*",
-        buttons=file_buttons
+        reply_markup=reply_markup,
+        parse_mode="Markdown"
     )
 
-@client.on(events.CallbackQuery(data=b'get_file'))
-async def file_cb(event):
-    await event.answer("Sending file...", alert=False)
-    sent_msg = await event.respond(
+async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer("Sending file...")
+    sent_msg = await query.message.reply_text(
         "📁 **Here is your requested movie file:**\n\n"
         "🔗 [Click Here to Download File](https://t.me/movieseries0012)\n"
-        "⏳ *Note: This file will auto-delete in 5 minutes for safety.*"
+        "⏳ *Note: This file will auto-delete in 5 minutes for safety.*",
+        parse_mode="Markdown"
     )
-    
     await asyncio.sleep(300)
     try:
         await sent_msg.delete()
     except:
         pass
 
-if __name__ == "__main__":
-    print("Lucky Final Bot (Telethon) is running...")
-    client.run_until_disconnected()
+if __name__ == '__main__':
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
+    application.add_handler(CommandHandler('start', start))
+    application.add_handler(CallbackQueryHandler(verify_cb, pattern='^verified$'))
+    application.add_handler(CallbackQueryHandler(file_cb, pattern='^get_file$'))
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), search_handler))
+    print("Python-Telegram-Bot is running successfully...")
+    application.run_polling()
     
