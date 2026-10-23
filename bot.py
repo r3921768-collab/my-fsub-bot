@@ -21,40 +21,26 @@ threading.Thread(target=run_server, daemon=True).start()
 # ------------------------------------------------
 
 BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
-CHANNEL_1_URL = "https://t.me/movieseries0453"
-CHANNEL_2_URL = "https://t.me/movie_series0012"
 DATABASE_CHANNEL_ID = -1003867813389
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    keyboard = [
-        [InlineKeyboardButton("📢 Join Channel 1", url=CHANNEL_1_URL)],
-        [InlineKeyboardButton("📢 Join Channel 2", url=CHANNEL_2_URL)],
-        [InlineKeyboardButton("✅ I Have Joined, Continue", callback_data="verified")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         f"👋 Hello {user.first_name}!\n\n"
         "🎬 Welcome to Lucky Bot.\n"
-        "🚨 Please join our both channels first, then send any movie name.",
-        reply_markup=reply_markup
+        "🔍 Send any movie name to get search results and files!"
     )
-
-async def verify_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    await query.message.reply_text("✅ Verified! Now send the name of the movie you want to search.")
 
 async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
     query = update.message.text
     
-    # Size ane quality vala buttons jeva tame screen ma joya
+    # Size ane quality vala direct buttons
     file_keyboard = [
-        [InlineKeyboardButton("📦 [445.66 MB] 1080p Web-DL", callback_data="get_file_3")],
-        [InlineKeyboardButton("📦 [700.96 MB] 720p HEVC", callback_data="get_file_4")],
-        [InlineKeyboardButton("📦 [1.02 GB] 1080p HEVC", callback_data="get_file_5")]
+        [InlineKeyboardButton("📦 [441.11 MB] 1080p Web-DL", callback_data="get_file_3")],
+        [InlineKeyboardButton("📦 [1.01 GB] 720p HEVC", callback_data="get_file_4")],
+        [InlineKeyboardButton("📦 [2.19 GB] 1080p HEVC", callback_data="get_file_5")]
     ]
     reply_markup = InlineKeyboardMarkup(file_keyboard)
     
@@ -89,13 +75,12 @@ async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await query.message.reply_text(
             f"⚠️ **Error fetching file:** `{e}`\n\n"
-            "💡 *Tip:* Make sure the message exists in your database channel!"
+            "💡 *Tip:* Make sure the message exists in your database channel and bot is admin!"
         )
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(BOT_TOKEN).build()
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(CallbackQueryHandler(verify_cb, pattern='^verified$'))
     application.add_handler(CallbackQueryHandler(file_cb, pattern='^get_file_'))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), search_handler))
     print("Lucky Movie Filter Bot is running successfully...")
