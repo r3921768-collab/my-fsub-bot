@@ -1,6 +1,25 @@
 import asyncio
+import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, CallbackQueryHandler, filters
+
+# --- Dummy HTTP Server for Render Port Binding ---
+class SimpleHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Lucky Bot is active and running!")
+
+def run_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(('0.0.0.0', port), SimpleHandler)
+    server.serve_forever()
+
+# Start dummy server in a background thread so Render detects an open port
+threading.Thread(target=run_server, daemon=True).start()
+# ------------------------------------------------
 
 BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
 CHANNEL_1 = "https://t.me/movieseries0012"
@@ -61,6 +80,6 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(verify_cb, pattern='^verified$'))
     application.add_handler(CallbackQueryHandler(file_cb, pattern='^get_file$'))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), search_handler))
-    print("Python-Telegram-Bot is running successfully...")
+    print("Python-Telegram-Bot is running successfully with HTTP server...")
     application.run_polling()
     
