@@ -23,7 +23,7 @@ threading.Thread(target=run_server, daemon=True).start()
 BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
 CHANNEL_1_URL = "https://t.me/movieseries0453"
 CHANNEL_2_URL = "https://t.me/movie_series0012"
-DATABASE_CHANNEL_ID = -1003867813389  # Tamari movie database channel ni ID ahiya nakho (e.g., -1001234567890)
+DATABASE_CHANNEL_ID = -1003867813389 # Tamari database channel ni ID ahiya nakho
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -46,12 +46,13 @@ async def verify_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.message.reply_text("✅ Verified! Now send the name of the movie you want to search.")
 
 async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.text:
+        return
     query = update.message.text
     
-    # Ahiya bot database channel mathi movie search karse ane button banavse
     file_keyboard = [
-        [InlineKeyboardButton("📦 [1080p] Movie File", callback_data=f"get_file_1080")],
-        [InlineKeyboardButton("📦 [720p] Movie File", callback_data=f"get_file_720")]
+        [InlineKeyboardButton("📦 [1080p] Movie File", callback_data="get_file_1080")],
+        [InlineKeyboardButton("📦 [720p] Movie File", callback_data="get_file_720")]
     ]
     reply_markup = InlineKeyboardMarkup(file_keyboard)
     
@@ -64,20 +65,27 @@ async def search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def file_cb(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer("Sending movie file...")
+    await query.answer("Fetching movie file from database...")
     
-    sent_msg = await query.message.reply_text(
-        "📁 **Here is your requested movie file:**\n\n"
-        f"🔗 [Get Movie From Channel]({CHANNEL_1_URL})\n"
-        "⏳ *Note: This file will auto-delete in 5 minutes for safety.*",
-        parse_mode="Markdown"
-    )
+    chat_id = query.message.chat_id
     
-    await asyncio.sleep(300)
     try:
-        await sent_msg.delete()
-    except:
-        pass
+        # Ahiya database channel mathi file direct user na chat ma copy thase
+        # (Note: DATABASE_CHANNEL_ID ma tamari channel ni ID ane message_id ma movie message no ID aavse)
+        sent_msg = await context.bot.copy_message(
+            chat_id=chat_id,
+            from_chat_id=DATABASE_CHANNEL_ID,
+            message_id=2  # Tamari database channel na message no ID (Test mate 2 lakhelu chhe)
+        )
+        
+        # 5 minute pachi auto-delete note sathe
+        await asyncio.sleep(300)
+        try:
+            await sent_msg.delete()
+        except:
+            pass
+    except Exception as e:
+        await query.message.reply_text(f"⚠️ Error fetching file: {e}\n\nPlease make sure bot is admin in the database channel!")
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(BOT_TOKEN).build()
@@ -85,6 +93,6 @@ if __name__ == '__main__':
     application.add_handler(CallbackQueryHandler(verify_cb, pattern='^verified$'))
     application.add_handler(CallbackQueryHandler(file_cb, pattern='^get_file_'))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), search_handler))
-    print("Lucky Movie Filter Bot is running with database search...")
+    print("Lucky Movie Filter Bot is running with database file fetch...")
     application.run_polling()
-        
+    
