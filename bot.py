@@ -23,7 +23,7 @@ threading.Thread(target=run_server, daemon=True).start()
 BOT_TOKEN = "8574146217:AAHKhJS_LoeXKOVQ4mNwPruS_UGHRFywNs8"
 CHANNEL_1_URL = "https://t.me/movieseries0453"
 CHANNEL_2_URL = "https://t.me/movie_series0012"
-DATABASE_CHANNEL_ID = -1003867813389 # Tamari database channel ni ID ahiya nakho
+DATABASE_CHANNEL_ID = -1003867813389# Tamari database channel ni ID ahiya nakho
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
